@@ -1,0 +1,74 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  pull-ci:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses:  actions/checkout@v3
+
+      - name: Installing frontend dependencies
+        run:
+
+      - name: Installing backend dependencies
+        run:
+  
+      - name: Lint frontend
+        run:
+  
+      - name: Lint backend
+        run:
+  
+      - name: Run frontend tests
+        run:
+  
+      - name: Run backend tests
+        run:
+  
+      - name: Security checks
+        run:
+
+
+  push-ci:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses:
+
+      - name: Installing frontend dependencies
+        run:
+
+      - name: Installing backend dependencies
+        run:
+
+      - name: Lint frontend
+        run:
+
+      - name: Lint backend
+        run:
+
+      - name: Run frontend tests
+        run:
+
+      - name: Run backend tests
+        run:
+
+      - name: Security checks
+        run:
+
+      - name: Build Docker images
+        run:
+
+      - name: Deploy to Dev environment
+        run:
