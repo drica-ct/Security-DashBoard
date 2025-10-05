@@ -1,0 +1,76 @@
+name: Production - Continuous Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag to deploy in production'
+        required: true
+      confirm:
+        description: 'Type YES to confirm production deploy'
+        required: true
+        default: 'NO'
+
+jobs:
+  prod-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Install frontend dependencies
+        run: |
+          cd frontend
+          npm install
+
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          python -m venv venv
+          source venv/bin/activate && pip install -r requirements.txt
+
+      - name: Lint frontend
+        run: |
+          cd frontend
+          npm install
+          npx eslint .
+
+      - name: Lint backend
+        run: |
+          cd backend
+          python -m venv venv
+          . venv/bin/activate && pip install pylint
+          . venv/bin/activate && pylint **/*.py
+
+      - name: Run unit tests
+        run: |
+
+      - name: Run integration tests
+        run: |
+
+      - name: Run E2E tests
+        run: |
+
+      - name: Build Docker images
+        run: |
+
+
+  prod-cd:
+    needs: prod-ci
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.confirm == 'YES' }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to Production
+        run: |
+
+      - name: Run smoke tests
+        run: |
+
+      - name: Rollback if failed
+        if: failure()
+        run: |

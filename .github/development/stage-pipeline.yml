@@ -1,0 +1,57 @@
+name: Continous Deployment
+
+on:
+  workflow_dispatch:
+    braches:
+      - staging
+    inputs:
+      version:
+        description: 'Version to implement at staging'
+        required: false
+        default: 'latest'
+  
+  jobs:
+    staging-ci:
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Check out repository
+          uses: actions/checkout@v3
+
+        - name: Install frontend dependencies
+          run: |
+
+        - name: Install backend dependencies
+          run: |
+
+        - name: Lint frontend
+          run: |
+
+        - name: Lint backend
+          run: |
+
+        - name: Run unit tests
+          run: |
+
+        - name: Run integration tests
+          run: |
+
+        - name: Run E2E tests
+          run: |
+
+        - name: Build Docker images
+          run: |
+  
+    staging-cd:
+      needs: staging-ci
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Check out repository
+          uses: actions/checkout@v3
+
+        - name: Deploy to Staging environment
+          run: |
+
+        - name: Run smoke tests
+          run: |
