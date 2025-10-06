@@ -1,12 +1,14 @@
 services:
   backend:
-    build: ./backend_container
+    build: ./../backend
     ports:
       - "5001:5000" # Dentro do container: 5000 # No host: 5001
   frontend:
-    build: ./frontend_container
+    build: ./../frontend
     ports:
       - "3000:3000"
-  
   security:
+    build: ./../security
+    ports:
+      - "2000:2000"
     
