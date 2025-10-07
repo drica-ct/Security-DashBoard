@@ -20,7 +20,7 @@ void	parse_json(t_results *result, const char *file)
 
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-		error_map("Cannot open .json file", g); // TODO escrever error_exit e afins
+		error_map("Cannot open .json file"); // TODO escrever error_exit e afins
 	while (1)
 	{
     char	*buff;

@@ -7,7 +7,7 @@
 # include <time.h>
 # include <errno.h>
 # include <math.h>
-# include "../libft/libft.h"
+//# include "../libft/libft.h"
 
 typedef enum s_severity
 {
