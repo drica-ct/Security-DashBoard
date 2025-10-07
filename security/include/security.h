@@ -14,6 +14,7 @@ typedef enum s_severity
 	LOW,
 	MID,
 	HIGH,
+	CRITICAL,
 }		t_severity;
 
 typedef struct s_vulnerabilities

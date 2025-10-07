@@ -13,6 +13,16 @@ trivy config ./my-terraform-code
 #include <stdio.h>
 #include <stdlib.h>
 
+char	*trim_whitespace(const char *str)
+{
+	; // TODO Combinar ft_strtrim() com ft_isdelim() ?
+}
+
+void	parse_line(t_results *result)
+{
+	; // TODO para cada linha, guardar info relevante
+}
+
 void	parse_json(t_results *result, const char *file)
 {
 	char	*line;
@@ -23,7 +33,7 @@ void	parse_json(t_results *result, const char *file)
 		error_map("Cannot open .json file"); // TODO escrever error_exit e afins
 	while (1)
 	{
-    char	*buff;
+		char	*buff;
 
 		line = get_next_line(fd); // TODO trazer o get_next_line
 		if (!line)
@@ -37,27 +47,31 @@ void	parse_json(t_results *result, const char *file)
 	close(fd);
 }
 
-int main()
+int main(void)
 {
+	if (access(trivy, F_OK) != 0)
+	{
+		printf("Trivy is not installed in this unit. Please install Trivy before proceeding\n");
+		return 1;
+	}
 
 	t_results result;
 
-	// Define the image to scan // REDO
-	const char *image = "nginx:latest";
-  const char *json_file = "security/report.json";
+	// TODO Definir isto em duas threads
 
-	// TODO Possivelmente verificar se Trivy esta instalado antes de correr este comando?
+	// Define the image to scan
+	const char *image = "nginx:latest";
+	const char *json_file = "security/report.json"; // TODO definir nome da pasta
 
 	// Construct the command string // REDO
 	char command[256];
 	snprintf(command, sizeof(command), "./src/scan.sh %s", image);
 
-	// Run the scan // REDO
-	int ret = system(command);
-	if (ret != 0)
+	// Run the command // REDO
+	if (system(command) != 0)
 	{
 		fprintf(stderr, "Error: Trivy scan failed.\n");
-			return 1;
+		return 1;
 	}
 
 	parse_json(&result, json_file);
@@ -90,7 +104,7 @@ int main()
 	fclose(fp);
 	fclose(out);
 
-	printf("Scan complete. Results saved to ./report.md\n");
+	//printf("Scan complete. Results saved to ./report.md\n");
 	return 0;
 }
 
