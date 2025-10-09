@@ -13,17 +13,89 @@ trivy config ./my-terraform-code
 #include <stdio.h>
 #include <stdlib.h>
 
-char	*trim_whitespace(const char *str)
+static size_t	ft_strlen(const char *str)
 {
-	; // TODO Combinar ft_strtrim() com ft_isdelim() ?
+	size_t	l;
+
+	l = 0;
+	while (str[l] != '\0')
+		l++;
+	return (l);
 }
 
-void	parse_line(t_results *result)
+static bool	ft_isdelim(int c)
 {
-	; // TODO para cada linha, guardar info relevante
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\0'
+		|| c == '\v' || c == '\f' || c == '\r')
+		return (true);
+	else
+		return (false);
 }
 
-void	parse_json(t_results *result, const char *file)
+static char	*trim_whitespace(const char *str)
+{
+	unsigned int	i = 0;
+	unsigned int	j = ft_strlen(str);
+	unsigned int	k = 0;
+	char			*dest;
+
+	while(ft_isdelim(str[i]))
+		i++;
+
+	while(ft_isdelim(str[j]))
+		j--;
+
+	dest = (char *)malloc((j - i + 2) * sizeof(char));
+	if (!dest)
+		return (NULL);
+
+	while(i + k <= j)
+	{
+		dest[k] = str[i + k];
+		k++;
+	}
+	dest[k] = '\0';
+
+	return (dest);
+}
+
+static int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+	int		r;
+
+	i = 0;
+	r = 0;
+	while (s1[i] != '\0' && i < n && r == 0)
+	{
+		r = (unsigned char)s1[i] - (unsigned char)s2[i];
+		i++;
+	}
+	if (r == 0 && ft_strlen(s1) < ft_strlen(s2) && i < n)
+	{
+		while (s2[i] != '\0' && i < n)
+		{
+			r -= (unsigned char)s2[i];
+			i++;
+		}
+	}
+	if (r > 0)
+		r /= r;
+	else if (r < 0)
+		r /= -r;
+	return (r);
+}
+
+static void	parse_line(t_results *result, char *line)
+{
+	// TODO As aspas vao estar no json?
+	if (ft_strcmp(line, "Target:", 7) != 0)
+	{
+		; // TODO para cada linha, guardar info relevante;
+	}
+}
+
+static void	parse_json(t_results *result, const char *file)
 {
 	char	*line;
 	int		fd;
@@ -38,7 +110,7 @@ void	parse_json(t_results *result, const char *file)
 		line = get_next_line(fd); // TODO trazer o get_next_line
 		if (!line)
 			break ;
-		buff = trim_whitespace(line); // TODO escrever funcao
+		buff = trim_whitespace(line);
 		if (!ft_isemptystr(buff))
 			parse_line(&result, line); // TODO escrever funcao
 		free(line);
