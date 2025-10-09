@@ -128,6 +128,7 @@ int main(void)
 	}
 
 	t_results result;
+	// TODO Preciso escrever init_results()
 
 	// TODO Definir isto em duas threads
 
