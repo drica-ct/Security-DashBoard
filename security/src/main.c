@@ -10,8 +10,6 @@ trivy config ./my-terraform-code
 // REDO = Reavaliar ou refazer o segmento
 
 #include "../include/security.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 static size_t	ft_strlen(const char *str)
 {
@@ -86,33 +84,98 @@ static int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (r);
 }
 
-static void	parse_line(t_results *result, char *line)
+char	*ft_substr(const char *str, unsigned int start, size_t len)
 {
-	// TODO As aspas vao estar no json?
-	if (ft_strcmp(line, "Target:", 7) != 0)
+	unsigned int	l;
+	char			*dest;
+	size_t			i;
+
+	l = (unsigned int)ft_strlen(str);
+	i = 0;
+	if (l < start || len == 0)
+		dest = (char *)malloc(1 * sizeof(char));
+	else if ((l - start) > (unsigned int)len)
+		dest = (char *)malloc((len + 1) * sizeof(char));
+	else
+		dest = (char *)malloc((l - start + 1) * sizeof(char));
+	if (!dest)
+		return (NULL);
+	while (i < len && l > start && str[start] != '\0')
 	{
-		; // TODO para cada linha, guardar info relevante;
+		dest[i] = str[start];
+		start++;
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
+}
+
+static void	parse_vuln(t_results *result, int fd)
+{
+	; // TODO escrever funcao
+}
+
+static void	parse_results(t_results *result, int fd)
+{
+	while (1)
+	{
+		char *line = get_next_line(fd); // TODO trazer o get_next_line
+		if (!line)
+			break ;
+		char *buff = trim_whitespace(line);
+		if (ft_strcmp(buff, "]", 1) == 0)
+		{
+			free(line);
+			free(buff);
+			break ;
+		}
+
+		if (ft_strcmp(buff, "Target:", 7) == 0) // TODO As aspas vao estar no json?
+		{
+			result->target = ft_substr(buff, 8, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "Class:", 6) == 0) // TODO As aspas vao estar no json?
+		{
+			result->pc_class = ft_substr(buff, 7, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "Type:", 5) == 0) // TODO As aspas vao estar no json?
+		{
+			result->type = ft_substr(buff, 6, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "Vulnerabilities:", 16) == 0) // TODO As aspas vao estar no json?
+		{
+			parse_vuln(&result, fd); // TODO escrever funcao
+		}
+
+		free(line);
+		free(buff);
 	}
 }
 
 static void	parse_json(t_results *result, const char *file)
 {
-	char	*line;
 	int		fd;
 
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		error_map("Cannot open .json file"); // TODO escrever error_exit e afins
+
 	while (1)
 	{
-		char	*buff;
-
-		line = get_next_line(fd); // TODO trazer o get_next_line
+		char *line = get_next_line(fd); // TODO trazer o get_next_line
 		if (!line)
 			break ;
-		buff = trim_whitespace(line);
-		if (!ft_isemptystr(buff))
-			parse_line(&result, line); // TODO escrever funcao
+		char *buff = trim_whitespace(line);
+		if (ft_strcmp(buff, "]", 1) == 0)
+		{
+			free(line);
+			free(buff);
+			break ;
+		}
+
+		if (ft_strcmp(buff, "Results:", 8) == 0) // TODO As aspas vao estar no json?
+			parse_results(&result, fd); // TODO escrever funcao
+
 		free(line);
 		free(buff);
 	}
@@ -121,7 +184,7 @@ static void	parse_json(t_results *result, const char *file)
 
 int main(void)
 {
-	if (access(trivy, F_OK) != 0)
+	if (access("trivy", F_OK) != 0)
 	{
 		printf("Trivy is not installed in this unit. Please install Trivy before proceeding\n");
 		return 1;
