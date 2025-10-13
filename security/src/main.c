@@ -11,6 +11,22 @@ trivy config ./my-terraform-code
 
 #include "../include/security.h"
 
+static void run_trivy(const char *image, const char *json_file, t_results *result)
+{
+	// Construct the command string // REDO
+	char command[256];
+	snprintf(command, sizeof(command), "./src/scan.sh %s", image);
+
+	// Run the command // REDO
+	if (system(command) != 0)
+	{
+		fprintf(stderr, "Error: Trivy scan failed.\n");
+		return 1;
+	}
+
+	parse_json(&result, json_file);
+}
+
 int main(void)
 {
 	if (access("trivy", F_OK) != 0)
@@ -26,23 +42,12 @@ int main(void)
 
 	// Define the image to scan
 	const char *image = "nginx:latest";
-	const char *json_file = "security/report.json"; // TODO definir nome da pasta
+	const char *json_file = "security/report.json"; // TODO definir nome da pasta. Cada pasta deve ter o nome do respectivo report
 
-	// Construct the command string // REDO
-	char command[256];
-	snprintf(command, sizeof(command), "./src/scan.sh %s", image);
-
-	// Run the command // REDO
-	if (system(command) != 0)
-	{
-		fprintf(stderr, "Error: Trivy scan failed.\n");
-		return 1;
-	}
-
-	parse_json(&result, json_file);
+	run_trivy(image, json_file, &result);
 
 	// Open the results file // REDO
-	FILE *fp = fopen(json_file, "r");
+	/*FILE *fp = fopen(json_file, "r");
 	if (!fp)
 	{
 		perror("Failed to open results file");
@@ -67,7 +72,7 @@ int main(void)
 	}
 
 	fclose(fp);
-	fclose(out);
+	fclose(out);*/
 
 	//printf("Scan complete. Results saved to ./report.md\n");
 	return 0;
