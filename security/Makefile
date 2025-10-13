@@ -3,8 +3,7 @@ CC = cc
 FLAGS = -Wall -Wextra -Werror
 RM = rm -fr
 MAIN = src/main.c
-#FILES = Utils/loading.c Utils/loading2.c Utils/rendering.c Utils/rendering2.c Utils/rendering3.c Utils/moving.c \
-		Utils/validating.c
+FILES = src/Utils/*.c
 #OBJ_SRC = loading.o loading2.o rendering.o rendering2.o rendering3.o moving.o \
 		validating.o
 #OBJ = obj/loading.o obj/loading2.o obj/rendering.o obj/rendering2.o obj/rendering3.o obj/moving.o \
