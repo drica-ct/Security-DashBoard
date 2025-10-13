@@ -1,8 +1,99 @@
 #include "../../include/security.h"
 
+static t_severity	parse_grade(char *str)
+{
+	t_severity  tmp;
+
+	if (ft_strcmp(str, "\"HIGH\":", 7) == 0)
+		tmp = HIGH;
+	else if (ft_strcmp(str, "\"MID\":", 6) == 0)
+		tmp = MID;
+	else if (ft_strcmp(str, "\"LOW\":", 6) == 0)
+		tmp = LOW;
+	else if (ft_strcmp(str, "\"CRITICAL\":", 11) == 0)
+		tmp = CRITICAL;
+
+	free(str);
+	return (tmp);
+}
+
+static void	parse_refs(t_vulnerabilities *vuln, int fd)
+{
+	vuln->references = malloc(X * sizeof(char **));
+	while (1)
+	{
+		char *line = get_next_line(fd); // TODO trazer o get_next_line
+		if (!line)
+			break ;
+		char *buff = trim_whitespace(line);
+		if (ft_strcmp(buff, "]", 1) == 0)
+		{
+			free(line);
+			free(buff);
+			break ;
+		}
+
+		// TODO add_to_matrix(vuln->references, buff);
+
+		free(line);
+		free(buff);
+	}
+}
+
 static void	parse_vuln(t_results *result, int fd)
 {
-	; // TODO escrever funcao
+	t_vulnerabilities   *tmp_vuln = malloc(1 * sizeof(t_vulnerabilities));
+
+	while (1)
+	{
+		char *line = get_next_line(fd); // TODO trazer o get_next_line
+		if (!line)
+			break ;
+		char *buff = trim_whitespace(line);
+		if (ft_strcmp(buff, "}", 1) == 0)
+		{
+			free(line);
+			free(buff);
+			break ;
+		}
+
+		if (ft_strcmp(buff, "\"VulnerabilityID\":", 18) == 0)
+		{
+			tmp_vuln->id = ft_substr(buff, 19, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "\"PkgName\":", 10) == 0)
+		{
+			tmp_vuln->pkg_name = ft_substr(buff, 11, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "\"InstalledVersion\":", 19) == 0)
+		{
+			tmp_vuln->install_version = ft_substr(buff, 20, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "\"FixedVersion\":", 15) == 0)
+		{
+			tmp_vuln->fixed_version = ft_substr(buff, 16, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "\"Severity\":", 11) == 0)
+		{
+			tmp_vuln->grade = parse_grade(ft_substr(buff, 12, ft_strlen(buff)));
+		}
+		else if (ft_strcmp(buff, "\"Title\":", 8) == 0)
+		{
+			tmp_vuln->title = ft_substr(buff, 9, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "\"Description\":", 14) == 0)
+		{
+			tmp_vuln->description = ft_substr(buff, 15, ft_strlen(buff));
+		}
+		else if (ft_strcmp(buff, "\"References\":", 13) == 0)
+		{
+			parse_refs(&tmp_vuln, fd);
+		}
+
+		free(line);
+		free(buff);
+	}
+    // TODO adicionar a lista (result->vuln_list)
 }
 
 static void	parse_results(t_results *result, int fd)
@@ -20,21 +111,21 @@ static void	parse_results(t_results *result, int fd)
 			break ;
 		}
 
-		if (ft_strcmp(buff, "Target:", 7) == 0) // TODO As aspas vao estar no json?
+		if (ft_strcmp(buff, "\"Target\":", 9) == 0)
 		{
-			result->target = ft_substr(buff, 8, ft_strlen(buff));
+			result->target = ft_substr(buff, 10, ft_strlen(buff));
 		}
-		else if (ft_strcmp(buff, "Class:", 6) == 0) // TODO As aspas vao estar no json?
+		else if (ft_strcmp(buff, "\"Class\":", 8) == 0)
 		{
-			result->pc_class = ft_substr(buff, 7, ft_strlen(buff));
+			result->pc_class = ft_substr(buff, 9, ft_strlen(buff));
 		}
-		else if (ft_strcmp(buff, "Type:", 5) == 0) // TODO As aspas vao estar no json?
+		else if (ft_strcmp(buff, "\"Type\":", 7) == 0)
 		{
-			result->type = ft_substr(buff, 6, ft_strlen(buff));
+			result->type = ft_substr(buff, 8, ft_strlen(buff));
 		}
-		else if (ft_strcmp(buff, "Vulnerabilities:", 16) == 0) // TODO As aspas vao estar no json?
+		else if (ft_strcmp(buff, "\"Vulnerabilities\":", 18) == 0)
 		{
-			parse_vuln(&result, fd); // TODO escrever funcao
+			parse_vuln(&result, fd);
 		}
 
 		free(line);
@@ -63,8 +154,8 @@ void	parse_json(t_results *result, const char *file)
 			break ;
 		}
 
-		if (ft_strcmp(buff, "Results:", 8) == 0) // TODO As aspas vao estar no json?
-			parse_results(&result, fd); // TODO escrever funcao
+		if (ft_strcmp(buff, "\"Results\":", 10) == 0)
+			parse_results(&result, fd);
 
 		free(line);
 		free(buff);
