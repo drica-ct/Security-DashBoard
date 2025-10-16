@@ -42,12 +42,12 @@ int main(void)
 	t_trivy_job job1 =
 	{
 		.image = "nginx:latest",
-		.json_file = "./scans/IMAGE/report.json" // TODO corrigir o nome da IMAGE quando finalizado
+		.json_file = "./scans/IMAGE_nginx/report.json" // TODO corrigir o nome da IMAGE quando finalizado
 	};
 	t_trivy_job job2 =
 	{
 		.image = "python:3.9",
-		.json_file = "./scans/IMAGE/report.json" // TODO corrigir o nome da IMAGE quando finalizado
+		.json_file = "./scans/IMAGE_python/report.json" // TODO corrigir o nome da IMAGE quando finalizado
 	};
 
 	pthread_t t1, t2;
