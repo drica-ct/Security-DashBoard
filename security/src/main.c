@@ -1,15 +1,10 @@
-/*# Scan a Docker image for vulnerabilities
-trivy image nginx:latest
-
-# Scan source code for IaC misconfigurations
-trivy config ./my-terraform-code
-*/
-
-//Exemplo muito duvidoso
-// TODO = Por fazer, ou revisitar
-// REDO = Reavaliar ou refazer o segmento
-
 #include "../include/security.h"
+
+typedef struct s_trivy_job
+{
+	const char *image;
+	const char *json_file;
+}	t_trivy_job;
 
 static void run_trivy(const char *image, const char *json_file, t_results *result)
 {
@@ -24,56 +19,54 @@ static void run_trivy(const char *image, const char *json_file, t_results *resul
 		return 1;
 	}
 
-	parse_json(&result, json_file);
+	//parse_json(&result, json_file);
+}
+
+static void *thread_run_trivy(void *arg)
+{
+	t_trivy_job *job = (t_trivy_job *)arg;
+
+	printf("Starting scan for image: %s\n", job->image);
+	run_trivy(job->image, job->json_file);
+	printf("Completed scan for image: %s → %s\n", job->image, job->json_file);
 }
 
 int main(void)
 {
-	if (access("trivy", F_OK) != 0)
-	{
-		printf("Trivy is not installed in this unit. Please install Trivy before proceeding\n");
+
+	if (access("trivy", F_OK) != 0) {
+		printf("Trivy is not installed in this unit. Please install Trivy before proceeding.\n");
 		return 1;
 	}
 
-	t_results result;
-	// TODO Preciso escrever init_results()
-
-	// TODO Definir isto em duas threads
-
-	// Define the image to scan
-	const char *image = "nginx:latest";
-	const char *json_file = "security/report.json"; // TODO definir nome da pasta. Cada pasta deve ter o nome do respectivo report
-
-	run_trivy(image, json_file, &result);
-
-	// Open the results file // REDO
-	/*FILE *fp = fopen(json_file, "r");
-	if (!fp)
+	t_trivy_job job1 =
 	{
-		perror("Failed to open results file");
-		return 1;
+		.image = "nginx:latest",
+		.json_file = "./scans/IMAGE/report.json" // TODO corrigir o nome da IMAGE quando finalizado
+	};
+	t_trivy_job job2 =
+	{
+		.image = "python:3.9",
+		.json_file = "./scans/IMAGE/report.json" // TODO corrigir o nome da IMAGE quando finalizado
+	};
+
+	pthread_t t1, t2;
+
+	if (pthread_create(&t1, NULL, thread_run_trivy, &job1) != 0)
+	{
+		perror("Failed to create thread 1 (nginx)");
+		return (1);
+	}
+	if (pthread_create(&t2, NULL, thread_run_trivy, &job2) != 0)
+	{
+		perror("Failed to create thread 2 (python)");
+		return (1);
 	}
 
-	// Open a new file // REDO
-	FILE *out = fopen("./report.md", "w");
-	if (!out)
-	{
-		perror("Failed to open output file");
-		fclose(fp);
-		return 1;
-	}
+	pthread_join(t1, NULL);
+	pthread_join(t2, NULL);
 
-	// Process or save the results (here we just copy to the second file) // REDO
-	char buffer[1024];
-	size_t n;
-	while ((n = fread(buffer, 1, sizeof(buffer), fp)) > 0)
-	{
-		fwrite(buffer, 1, n, out);
-	}
+	printf("Both scans completed.\n");
 
-	fclose(fp);
-	fclose(out);*/
-
-	//printf("Scan complete. Results saved to ./report.md\n");
-	return 0;
+	return (0);
 }
