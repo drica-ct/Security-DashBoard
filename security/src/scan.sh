@@ -40,7 +40,7 @@ fi
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 OUT_DIR="$ROOT_DIR/scans" # TODO directorio com nome de IMAGE, mas resolvendo questao dos ":"
 CACHE_DIR="$ROOT_DIR/.trivy-cache"
-JSON_FILE="$OUT_DIR/result.json"
+JSON_FILE="$OUT_DIR/result.json" # TODO result ou report?
 mkdir -p "$OUT_DIR" "$CACHE_DIR"
 
 # --- Optional pre-pull ---

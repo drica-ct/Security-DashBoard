@@ -43,11 +43,13 @@ int main(void)
 	{
 		.image = "nginx:latest",
 		.json_file = "./scans/IMAGE_nginx/report.json" // TODO corrigir o nome da IMAGE quando finalizado
+		// TODO result ou report?
 	};
 	t_trivy_job job2 =
 	{
 		.image = "python:3.9",
 		.json_file = "./scans/IMAGE_python/report.json" // TODO corrigir o nome da IMAGE quando finalizado
+		// TODO result ou report?
 	};
 
 	pthread_t t1, t2;
