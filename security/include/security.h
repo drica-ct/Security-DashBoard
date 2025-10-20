@@ -12,7 +12,7 @@
 # include <math.h>
 # include <pthread.h>
 
-typedef enum s_severity
+/*typedef enum s_severity
 {
 	LOW,
 	MID,
@@ -55,5 +55,5 @@ int		destroy_game(t_game *game);
 //Utils - Destroying
 //void	destroy_map(t_game *g);
 //int		destroy_game(t_game *game);
-
+*/
 #endif

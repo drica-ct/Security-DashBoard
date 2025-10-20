@@ -8,15 +8,15 @@ typedef struct s_trivy_job
 
 static void run_trivy(const char *image, const char *json_file)
 {
-	// Construct the command string // REDO
+	// Construct the command string
 	char command[256];
 	snprintf(command, sizeof(command), "./src/scan.sh %s", image);
 
-	// Run the command // REDO
+	// Run the command
 	if (system(command) != 0)
 	{
 		fprintf(stderr, "Error: Trivy scan failed.\n");
-		return 1;
+		return (1);
 	}
 
 	//parse_json(&result, json_file);

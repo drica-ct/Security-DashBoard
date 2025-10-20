@@ -206,3 +206,17 @@ Relatório JSON atualizado + resumo em Markdown.
 - **Backend**: expõe endpoints `/health`, `/info`, `/vulnerabilities`, `/security-report`, `/metrics`.
 - **Frontend**: tem Home, Vulnerabilidades e Métricas, mostrando dados reais.
 - **Segurança**: fornece `report.json` que backend já consome.
+
+-------------------
+
+Semana 20/10/2025
+
+[A definir por Hugo]
+-Frequência de scans ainda por definir
+-Local para guardar reports (Github)
+
+To do:
+-[Adriana] Definir Crontab para correr programa com certa frequência (freq ainda por definir)
+-[João] Backend e Frontend terão Dockers para testar -> Comunicar com equipas respectivas
+-[Adriana] Novos relatórios: Estudar/Recolher informação quanto a ex.: performance (definir método)
+-[João] Novos relatórios: Implementar no código actual (possivelmente nova thread)
