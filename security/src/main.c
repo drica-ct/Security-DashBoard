@@ -6,7 +6,7 @@ typedef struct s_trivy_job
 	const char *json_file;
 }	t_trivy_job;
 
-static void run_trivy(const char *image, const char *json_file, t_results *result)
+static void run_trivy(const char *image, const char *json_file)
 {
 	// Construct the command string // REDO
 	char command[256];
