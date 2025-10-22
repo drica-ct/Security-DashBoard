@@ -220,3 +220,23 @@ To do:
 -[João] Backend e Frontend terão Dockers para testar -> Comunicar com equipas respectivas
 -[Adriana] Novos relatórios: Estudar/Recolher informação quanto a ex.: performance (definir método)
 -[João] Novos relatórios: Implementar no código actual (possivelmente nova thread)
+
+[22/10/2025] Novos relatórios:
+Segurança
+- **Verificar permissões de pastas críticas** → Lista em JSON (`caminho`, `permissão`, `dono`)
+- **Monitorizar logins falhados** → Número total + lista em JSON por utilizador
+- **Detetar brute-force local** → Lista em JSON com utilizador/IP e número de tentativas
+- **Listar processos suspeitos** → Lista em JSON com PID, nome, CPU e memória
+- **Monitorizar uso de `sudo`/root** → Lista em JSON com utilizador, comando e hora
+- **Verificar malware em pastas críticas** → Lista em JSON com caminho e tipo de ameaça
+- **Verificar vulnerabilidades das dependências locais (Trivy)** → Lista em JSON com pacote, versão, severidade e CVE
+- **Listar utilizadores recentemente ligados** → Lista em JSON com utilizador, IP e hora de login
+- **Monitorizar alterações em ficheiros de configuração** → Lista em JSON com ficheiro, utilizador e timestamp
+- **Contar tentativas de ligação de IPs diferentes** → Número total + lista em JSON com IPs e tentativas
+- **Verificar histórico de comandos (`.bash_history`)** → Lista em JSON com utilizador, comando e hora
+Monitoramento
+- **Uso de CPU, memória e disco** → Números em % ou valores absolutos
+- **Processos ativos e consumo de recursos** → Lista em JSON com PID, nome, CPU e memória
+- **Tráfego de rede** → Interface, protocolo e lista em JSON com bytes enviados/recebidos por interface
+- **Portas abertas e conexões ativas** → Lista em JSON com porta, protocolo, serviço e IP de origem/destino
+- **Logs do sistema (erros, alertas, warnings)** → Lista em JSON com timestamp, tipo e mensagem
