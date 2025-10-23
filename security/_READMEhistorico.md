@@ -224,15 +224,26 @@ To do:
 [22/10/2025] Novos relatórios:
 Segurança
 - **Verificar permissões de pastas críticas** → Lista em JSON (`caminho`, `permissão`, `dono`)
+			-O que é uma pasta crítica?
+      -O que são "permissões"? Por utilizador, por protecção (ex.: password)?
 - **Monitorizar logins falhados** → Número total + lista em JSON por utilizador
 - **Detetar brute-force local** → Lista em JSON com utilizador/IP e número de tentativas
+			-Investigar tipos de brute-force
+      -Investigar como detectá-los
 - **Listar processos suspeitos** → Lista em JSON com PID, nome, CPU e memória
+			-O que é um "processo suspeito"?
 - **Monitorizar uso de `sudo`/root** → Lista em JSON com utilizador, comando e hora
 - **Verificar malware em pastas críticas** → Lista em JSON com caminho e tipo de ameaça
+			-Como identificar malware? Investigar
 - **Verificar vulnerabilidades das dependências locais (Trivy)** → Lista em JSON com pacote, versão, severidade e CVE
+      -Feito
 - **Listar utilizadores recentemente ligados** → Lista em JSON com utilizador, IP e hora de login
+			-Definir "recente"
 - **Monitorizar alterações em ficheiros de configuração** → Lista em JSON com ficheiro, utilizador e timestamp
+			-Esclarecer quais são os ficheiros de configuração, ou quem os fornece, etc.
 - **Contar tentativas de ligação de IPs diferentes** → Número total + lista em JSON com IPs e tentativas
+			-Será que há overlap com tentativas de brute-force? Investigar
+
 - **Verificar histórico de comandos (`.bash_history`)** → Lista em JSON com utilizador, comando e hora
 Monitoramento
 - **Uso de CPU, memória e disco** → Números em % ou valores absolutos
