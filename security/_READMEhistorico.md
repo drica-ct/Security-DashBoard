@@ -251,3 +251,17 @@ Monitoramento
 - **Tráfego de rede** → Interface, protocolo e lista em JSON com bytes enviados/recebidos por interface
 - **Portas abertas e conexões ativas** → Lista em JSON com porta, protocolo, serviço e IP de origem/destino
 - **Logs do sistema (erros, alertas, warnings)** → Lista em JSON com timestamp, tipo e mensagem
+
+Reunião 23/10/2025
+
+[A definir por Hugo]
+-Frequência de scans ainda por definir
+-Local para guardar reports (Github)
+
+To do:
+-[João] Novos relatórios: Estudar/Recolher informação quanto a pontos em falta [prioridade ALTA]
+-[Adriana] Novos relatórios: Escrever scripts para serem corridos pela main. Começar pelos 6 pontos de baixo [prioridade ALTA]
+-[tbd] Reestruturar main para correr uma thread por script, por Docker [prioridade MÉDIA]
+-[tbd] Escrever função "write_json()" que, de preferência, poderá ser compatível com cada script [prioridade MÉDIA]
+-[Adriana] Definir Crontab para correr programa com certa frequência (freq ainda por definir) [prioridade BAIXA]
+-[João] Backend e Frontend terão Dockers para testar -> Comunicar com equipas respectivas [prioridade BAIXA]
