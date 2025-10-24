@@ -224,25 +224,33 @@ To do:
 [22/10/2025] Novos relatórios:
 Segurança
 - **Verificar permissões de pastas críticas** → Lista em JSON (`caminho`, `permissão`, `dono`)
-			-O que é uma pasta crítica?
-      -O que são "permissões"? Por utilizador, por protecção (ex.: password)?
+			-O que é uma "pasta crítica"? --> A definir por cliente? Apresentar como argumento?
+			-O que são "permissões"? --> "Read", "Write", "Execute", por utilizador ("Dono", "Grupo", "Outros")
+			-Protecção por password chama-se autenticacao. Conceito distinto.
+			-Ver checklist
+
 - **Monitorizar logins falhados** → Número total + lista em JSON por utilizador
 - **Detetar brute-force local** → Lista em JSON com utilizador/IP e número de tentativas
-			-Investigar tipos de brute-force
-      -Investigar como detectá-los
+			-Investigar tipos de brute-force --> Apenas tentativas de password, mesmo
+			-Investigar como detectá-los
+			-Ver checklist
 - **Listar processos suspeitos** → Lista em JSON com PID, nome, CPU e memória
-			-O que é um "processo suspeito"?
+			-O que é um "processo suspeito"? Investigar
+			-Ver checklist
 - **Monitorizar uso de `sudo`/root** → Lista em JSON com utilizador, comando e hora
 - **Verificar malware em pastas críticas** → Lista em JSON com caminho e tipo de ameaça
+			-O que é uma "pasta crítica"? --> A definir por cliente? Apresentar como argumento?
 			-Como identificar malware? Investigar
+			-Ver checklist
 - **Verificar vulnerabilidades das dependências locais (Trivy)** → Lista em JSON com pacote, versão, severidade e CVE
       -Feito
 - **Listar utilizadores recentemente ligados** → Lista em JSON com utilizador, IP e hora de login
-			-Definir "recente"
+			-Definir "recente" --> Dentro da frequencia definida, provavelmente
 - **Monitorizar alterações em ficheiros de configuração** → Lista em JSON com ficheiro, utilizador e timestamp
 			-Esclarecer quais são os ficheiros de configuração, ou quem os fornece, etc.
 - **Contar tentativas de ligação de IPs diferentes** → Número total + lista em JSON com IPs e tentativas
-			-Será que há overlap com tentativas de brute-force? Investigar
+			-Será que há overlap com tentativas de brute-force? Investigar --> Sim
+			-Ver checklist
 
 - **Verificar histórico de comandos (`.bash_history`)** → Lista em JSON com utilizador, comando e hora
 Monitoramento

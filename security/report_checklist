@@ -1,0 +1,116 @@
+- **Verificar permissões de pastas críticas** → Lista em JSON (`caminho`, `permissão`, `dono`)
+			-O que é uma pasta crítica?
+			-O que são "permissões"? --> "Read", "Write", "Execute", por utilizador ("Dono", "Grupo", "Outros")
+			-Protecção por password chama-se autenticacao. Conceito distinto.
+			-Exemplo ls -ld ==> drwxr-x--x  2 alice staff 4096 Oct 24 my_folder ==> alice(owner), staff(group)
+			-Exemplo getfacl my_folder ==>
+					# file: my_folder
+					# owner: alice
+					# group: staff
+					user::rwx       // This is Alice
+					user:bob:rx
+					group::r-x
+					mask::r-x
+					other::---
+
+
+
+- **Monitorizar logins falhados** → Número total + lista em JSON por utilizador
+- **Contar tentativas de ligação de IPs diferentes** → Número total + lista em JSON com IPs e tentativas
+			-Será que há overlap com tentativas de brute-force? Investigar --> Sim
+- **Detetar brute-force local** → Lista em JSON com utilizador/IP e número de tentativas
+			-Investigar tipos de brute-force --> Apenas tentativas de password, mesmo
+			-Investigar como detectá-los -->
+
+| Sign                                                            | Why It’s Suspicious                                          |
+| --------------------------------------------------------------- | ------------------------------------------------------------ |
+| **High volume of failed logins in a short time**                | Normal users don’t fail dozens/hundreds of times rapidly     |
+| **Repeated attempts on the same account**                       | Attackers may target a privileged user or known username     |
+| **Attempts using many different usernames**                     | Attackers often guess both usernames and passwords           |
+| **Unauthenticated login attempts from the same IP or IP range** | Automation tools often use a single attacking host or subnet |
+| **Attempts from foreign / unusual geographic locations**        | Login behavior inconsistent with normal user patterns        |
+| **Attempts at unusual hours**                                   | Outside regular working hours = increased suspicion          |
+| **Sequential or obvious username patterns**                     | e.g., admin1, admin2, test3 → likely automated enumeration   |
+| **Common/weak passwords attempted**                             | "Password1", "123456", etc. = spraying or dictionary attack  |
+| **Rapid cycling through different user-agents**                 | Bots switching signatures to evade detection                 |
+| **Spike in authentication events compared to baseline**         | Volume anomaly detection can reveal brute-force patterns     |
+| **Multiple failures followed by one success**                   | Indicator of cracking an account                             |
+| --------------------------------------------------------------- | ------------------------------------------------------------ |
+
+
+
+- **Listar processos suspeitos** → Lista em JSON com PID, nome, CPU e memória
+			-O que é um "processo suspeito"?
+- **Verificar malware em pastas críticas** → Lista em JSON com caminho e tipo de ameaça
+			-O que é uma "pasta crítica"?
+			-Como identificar malware?
+
+| Indicator                                         | Why it’s concerning                                 |
+| ------------------------------------------------- | --------------------------------------------------- |
+| **Unknown or unexpected name**                    | Not part of the normal OS or installed apps         |
+| **Running from a strange location**               | Malware often hides in `/tmp/`, `AppData`, etc.     |
+| **High CPU, RAM, or disk usage**                  | Malware may mine crypto, spread, or crack passwords |
+| **Network activity to unknown remote hosts**      | Possible data exfiltration or command-and-control   |
+| **Trying to escalate privileges**                 | Common in attacks                                   |
+| **Spawns many subprocesses**                      | Botnets, worms, fork bombs                          |
+| **Attempts to hide itself**                       | Disabling logs, terminating monitoring tools        |
+| **Starts automatically without permission**       | Persistence mechanism likely                        |
+| **Signed with an invalid or missing certificate** | Lack of trust/verification                          |
+| **Accessing sensitive files it shouldn’t**        | Credential theft indicators                         |
+| ------------------------------------------------- | --------------------------------------------------- |
+
+| Category                              | Examples                                  |
+| ------------------------------------- | ----------------------------------------- |
+| **Malware processes**                 | Cryptominers, ransomware, rootkits        |
+| **Hacking tools**                     | Password crackers, port scanners          |
+| **Injected or compromised processes** | Normal app hijacked by malicious code     |
+| **Unauthorized administrative tools** | Unknown remote shells or services         |
+| **Shadow processes**                  | Same name as legit one but wrong location |
+| ------------------------------------- | ----------------------------------------- |
+
+For instance, on Windows:
+explorer.exe in C:\Windows\ ✅ legit
+explorer.exe in C:\Users\Public\ ❌ very suspicious
+
+For instance, in Linux:
+A legit service in /usr/bin/ ✅
+Same name running from /tmp/ ❌ badge of malware
+
+
+
+
+- **Monitorizar alterações em ficheiros de configuração** → Lista em JSON com ficheiro, utilizador e timestamp
+			-Esclarecer quais são os ficheiros de configuração, ou quem os fornece, etc.
+
+			File Metadata (Timestamps)
+			-Exemplo stat /path/to/file
+						Access: (0644/-rw-r--r--)  Uid: (101897/joao-rib)   Gid: ( 4223/2023_porto)
+						Access: 2025-10-24 12:25:49.178446156 +0100
+						Modify: 2025-10-24 12:24:44.702218466 +0100
+						Change: 2025-10-24 12:25:47.402439880 +0100
+
+						mtime → last modification (content changed)
+						ctime → metadata changed (permissions, owner)
+						atime → last accessed
+
+			File Integrity Monitoring (FIM)
+			-Tools that alert when unauthorized changes occur:
+				-Linux: Tripwire, AIDE (Advanced Intrusion Detection Environment)
+				-Windows: Sysmon, Windows File Integrity Monitoring (part of Defender/Server)
+
+			Audit Logs
+			-Exemplo auditctl -w /etc/passwd -p wa -k passwd_changes
+			-Exemplo ausearch -k passwd_changes
+			(Shows which process/user modified it)
+
+			Version Control for critical files
+			If files are code or configs, you can use Git itself:
+			-Exemplo git log file.conf
+
+| Method                    | Tells **when**  |  Tells **who**  | Tells **what changed** | Good for             |
+| ------------------------- | :------------:  | :-------------: | :--------------------: | -------------------- |
+| File metadata             |        ✅       |        ❌       |            ❌          | Basic investigation  |
+| Permissions               |        ❌       | ✅ (potentially)|            ❌          | Preventive control   |
+| Audit logs                |        ✅       |        ✅       |            ✅          | Security/FIM         |
+| File Integrity Monitoring |        ✅       |    Sometimes    |            ✅          | Unauthorized changes |
+| Version Control           |        ✅       |        ✅       |            ✅          | Config/code files    |
